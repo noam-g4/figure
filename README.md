@@ -77,8 +77,8 @@ by running our program, our output will be:
 ```
 But, by setting environment variables, our program will replace the specified values from the yaml file by the set environment:
 ```bash
-WRITEMOD=true
-RETRIES=7
+export WRITEMOD=true
+export RETRIES=7
 go run .
 { test true 7 }
 ```
