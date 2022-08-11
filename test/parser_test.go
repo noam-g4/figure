@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 
+	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/fetcher"
 	"github.com/noam-g4/figure/parser"
 )
@@ -11,6 +12,47 @@ const realFile = "./resource/test-config.yml"
 
 type Config struct {
 	Env string `yaml:"env"`
+}
+
+func TestStripPrefix(t *testing.T) {
+	v := env.Var{
+		Name:  "TST_ONE",
+		Value: "one",
+	}
+
+	res := parser.StripPrefix("TST_", v)
+	if res.Name != "ONE" {
+		t.Fail()
+	}
+}
+
+func TestTransformName(t *testing.T) {
+	v := env.Var{
+		Name:  "TEST-this",
+		Value: "null",
+	}
+
+	camel := parser.TransformName(parser.Camel, "-", v)
+	snake := parser.TransformName(parser.Snake, "-", v)
+	caps := parser.TransformName(parser.Caps, "-", v)
+	snakeCaps := parser.TransformName(parser.SnakeCaps, "-", v)
+	undifiend := parser.TransformName(4, "-", v)
+
+	if camel.Name != "testThis" {
+		t.Fail()
+	}
+	if snake.Name != "test_this" {
+		t.Fail()
+	}
+	if caps.Name != "TEST-THIS" {
+		t.Fail()
+	}
+	if snakeCaps.Name != "TEST_THIS" {
+		t.Fail()
+	}
+	if undifiend.Name != "TEST-this" {
+		t.Fail()
+	}
 }
 
 func TestParseSuccess(t *testing.T) {
