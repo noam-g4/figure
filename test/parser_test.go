@@ -55,6 +55,23 @@ func TestTransformName(t *testing.T) {
 	}
 }
 
+func TestParseToMapSuccess(t *testing.T) {
+	_, data := fetcher.ReadFile(realFile)
+	err, m := parser.ParseToMap(data)
+	if err != nil &&
+		m["parent"].(map[string]interface{})["child"] != 3 {
+		t.Fail()
+	}
+}
+
+func TestParseToMapFail(t *testing.T) {
+	data := []byte("not a valid yaml")
+	err, _ := parser.ParseToMap(data)
+	if err == nil {
+		t.Fail()
+	}
+}
+
 func TestParseSuccess(t *testing.T) {
 	_, data := fetcher.ReadFile(realFile)
 	err, conf := parser.Parse[Config](data)

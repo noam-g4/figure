@@ -46,6 +46,15 @@ func TransformName(mode Mode, seperator string, v env.Var) env.Var {
 	}
 }
 
+func ParseToMap(b []byte) (error, map[string]interface{}) {
+	var m map[string]interface{}
+	err := yaml.Unmarshal(b, &m)
+	if err != nil {
+		return err, m
+	}
+	return nil, m
+}
+
 func Parse[T interface{}](b []byte) (error, T) {
 	var c T
 	err := yaml.Unmarshal(b, &c)
