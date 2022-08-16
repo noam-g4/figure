@@ -1,6 +1,7 @@
 package modifier
 
 import (
+	"github.com/noam-g4/figure/env"
 	f "github.com/noam-g4/functional"
 )
 
@@ -20,4 +21,11 @@ func TracePath(key string, m map[interface{}]interface{}, p Path) Path {
 		}
 	}
 	return Path{}
+}
+
+func GetModifier(v env.Var, m map[interface{}]interface{}) Modifier {
+	return Modifier{
+		Var:  v,
+		Path: TracePath(v.Name, m, Path{}),
+	}
 }
