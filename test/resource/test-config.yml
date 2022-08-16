@@ -1,5 +1,12 @@
-env: test
-writeMode: false
-retries: 5
-parent:
-  child: 3
+one: 1
+two: two
+three:
+  four:
+    five:
+      - 6
+      - 7
+      - 8
+nine: false
+ten: 
+  eleven: 12
+

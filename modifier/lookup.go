@@ -2,30 +2,26 @@ package modifier
 
 import (
 	"github.com/noam-g4/figure/env"
-	f "github.com/noam-g4/functional"
 )
 
-type Path []string
-
-func TracePath(key string, m map[interface{}]interface{}, p Path) Path {
-	for k := range m {
-		name := k.(string)
-		if key == name {
-			return f.ConcatSlices(p, Path{name})
+func FindValue(key string, m map[interface{}]interface{}) *interface{} {
+	for k, v := range m {
+		if k.(string) == key {
+			return &v
+		}
+		if val, ok := m[k].(map[interface{}]interface{}); ok {
+			res := FindValue(key, val)
+			if res != nil {
+				return res
+			}
 		}
 	}
-	for k := range m {
-		name := k.(string)
-		if val, ok := m[name].(map[interface{}]interface{}); ok {
-			return TracePath(key, val, f.ConcatSlices(p, Path{name}))
-		}
-	}
-	return Path{}
+	return nil
 }
 
 func GetModifier(v env.Var, m map[interface{}]interface{}) Modifier {
 	return Modifier{
-		Var:  v,
-		Path: TracePath(v.Name, m, Path{}),
+		Var:      v,
+		Accessor: FindValue(v.Name, m),
 	}
 }

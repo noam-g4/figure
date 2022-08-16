@@ -5,6 +5,6 @@ import (
 )
 
 type Modifier struct {
-	Var  env.Var
-	Path Path
+	Var      env.Var
+	Accessor *interface{}
 }
