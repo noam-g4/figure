@@ -9,46 +9,26 @@ import (
 	"github.com/noam-g4/figure/parser"
 )
 
-func TestFindValue(t *testing.T) {
+func TestModify(t *testing.T) {
 	_, d := fetcher.ReadFile("./resource/test-config.yml")
 	_, m := parser.ParseToMap(d)
 
-	p1 := modifier.FindValue("eleven", m)
-	if *p1 != 12 {
+	v := env.Var{
+		Name:  "one",
+		Value: "15",
+	}
+
+	if res := modifier.Modify(v, m); res["one"] != "15" && m["one"] != 1 {
 		t.Fail()
 	}
 
-	p2 := modifier.FindValue("two", m)
-	if *p2 != "two" {
-		t.Fail()
+	v2 := env.Var{
+		Name:  "five",
+		Value: "mod",
 	}
-
-	p3 := modifier.FindValue("five", m)
-	if p3 == nil {
-		t.Fail()
-	}
-
-	p4 := modifier.FindValue("twelve", m)
-	if p4 != nil {
-		t.Fail()
-	}
-}
-
-func TestGetModifier(t *testing.T) {
-	_, d := fetcher.ReadFile("./resource/test-config.yml")
-	_, m := parser.ParseToMap(d)
-
-	if m1 := modifier.GetModifier(env.Var{
-		Name:  "eleven",
-		Value: "12",
-	}, m); *m1.Accessor != 12 {
-		t.Fail()
-	}
-
-	if m2 := modifier.GetModifier(env.Var{
-		Name:  "two",
-		Value: "three",
-	}, m); *m2.Accessor != "two" {
+	r := modifier.Modify(v2, m)
+	val := r["three"].(map[interface{}]interface{})["four"].(map[interface{}]interface{})["five"]
+	if val != "mod" {
 		t.Fail()
 	}
 }
