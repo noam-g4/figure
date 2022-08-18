@@ -45,3 +45,31 @@ func ExtractArray(val string) (bool, []string) {
 	}
 	return false, []string{}
 }
+
+func InterpretType(value string) interface{} {
+	isBool, b := CastBooleanValue(value)
+	if isBool {
+		return b
+	}
+	isInt, i := CastIntValue(value)
+	if isInt {
+		return i
+	}
+	isFloat, f := CastFloatValue(value)
+	if isFloat {
+		return f
+	}
+	return value
+}
+
+func InterpretTypeWithArray(value string) interface{} {
+	isArray, arr := ExtractArray(value)
+	if isArray {
+		res := f.Map(arr,
+			func(s string) interface{} {
+				return InterpretType(s)
+			}, f.EmptySet[interface{}]())
+		return res
+	}
+	return InterpretType(value)
+}

@@ -48,5 +48,41 @@ func TestExtractArray(t *testing.T) {
 	if !ok || scs[0] != "a" || scs[1] != "b" || scs[2] != "c" {
 		t.Error(scs)
 	}
+}
 
+func TestInterpretType(t *testing.T) {
+	b := parser.InterpretType("FALSE")
+	i := parser.InterpretType("50")
+	f := parser.InterpretType("3.14")
+	s := parser.InterpretType("string")
+
+	if _, ok := b.(bool); !ok {
+		t.Error(b)
+	}
+	if _, ok := i.(int); !ok {
+		t.Error(i)
+	}
+	if _, ok := f.(float64); !ok {
+		t.Error(f)
+	}
+	if _, ok := s.(string); !ok {
+		t.Error(s)
+	}
+}
+
+func TestInterpretTypeWithArray(t *testing.T) {
+	i := parser.InterpretTypeWithArray("1")
+	if i != 1 {
+		t.Fail()
+	}
+	arrInt := parser.InterpretTypeWithArray("[1, 2, 3]")
+	aInt := arrInt.([]interface{})
+	if len(aInt) != 3 && aInt[2] != 3 {
+		t.Error(arrInt)
+	}
+	compArr := parser.InterpretTypeWithArray("[a, 1, true]")
+	cArr := compArr.([]interface{})
+	if cArr[0] != "a" && cArr[1] != 1 && !cArr[2].(bool) {
+		t.Error(cArr)
+	}
 }
