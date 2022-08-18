@@ -9,7 +9,7 @@ import (
 
 type Var struct {
 	Name  string
-	Value string
+	Value interface{}
 }
 
 func ListEnvs(prefix string) []string {

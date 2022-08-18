@@ -5,13 +5,24 @@ import (
 
 	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/fetcher"
+	"github.com/noam-g4/figure/modifier"
 	"github.com/noam-g4/figure/parser"
 )
 
 const realFile = "./resource/test-config.yml"
 
 type Config struct {
-	Env string `yaml:"env"`
+	One   int    `yaml:"one"`
+	Two   string `yaml:"two"`
+	Three struct {
+		Four struct {
+			Five []int `yaml:"five"`
+		} `yaml:"four"`
+	} `yaml:"three"`
+	Nine bool `yaml:"nine"`
+	Ten  struct {
+		Eleven int `yaml:"eleven"`
+	} `yaml:"ten"`
 }
 
 func TestStripPrefix(t *testing.T) {
@@ -72,13 +83,13 @@ func TestParseToMapFail(t *testing.T) {
 	}
 }
 
-// func TestParseSuccess(t *testing.T) {
-// 	_, data := fetcher.ReadFile(realFile)
-// 	err, conf := parser.Parse[Config](data)
-// 	if err != nil || conf.Env != "test" {
-// 		t.Fail()
-// 	}
-// }
+func TestParseSuccess(t *testing.T) {
+	_, data := fetcher.ReadFile(realFile)
+	err, conf := parser.Parse[Config](data)
+	if err != nil || conf.One != 1 || conf.Two != "two" || len(conf.Three.Four.Five) != 3 {
+		t.Fail()
+	}
+}
 
 func TestParseFail(t *testing.T) {
 	data := []byte("not a valid yaml")
@@ -88,15 +99,23 @@ func TestParseFail(t *testing.T) {
 	}
 }
 
-// func wrapper[T interface{}]() T {
-// 	_, data := fetcher.ReadFile(realFile)
-// 	_, conf := parser.Parse[T](data)
-// 	return conf
-// }
+// testing with modification of the origianl
+func TestSerializeYamlMap(t *testing.T) {
+	_, data := fetcher.ReadFile(realFile)
+	_, m := parser.ParseToMap(data)
 
-// func TestGenericTypePropagation(t *testing.T) {
-// 	conf := wrapper[Config]()
-// 	if conf.Env != "test" {
-// 		t.Fail()
-// 	}
-// }
+	v := env.Var{Name: "eleven", Value: "20"}
+	_, i := parser.CastIntValue(v.Value.(string))
+	v.Value = i
+
+	mod := modifier.Modify(v, m)
+	err, bts := parser.SerializeYamlMap(mod)
+	if err != nil || bts == nil {
+		t.Fail()
+	}
+
+	err, conf := parser.Parse[Config](bts)
+	if err != nil || conf.Ten.Eleven != 20 {
+		t.Fail()
+	}
+}

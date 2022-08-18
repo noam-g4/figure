@@ -63,3 +63,11 @@ func Parse[T interface{}](b []byte) (error, T) {
 	}
 	return nil, c
 }
+
+func SerializeYamlMap(m map[interface{}]interface{}) (error, []byte) {
+	data, err := yaml.Marshal(&m)
+	if err != nil {
+		return err, nil
+	}
+	return nil, data
+}
