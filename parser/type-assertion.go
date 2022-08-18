@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/noam-g4/figure/env"
 	f "github.com/noam-g4/functional"
 )
 
@@ -72,4 +73,11 @@ func InterpretTypeWithArray(value string) interface{} {
 		return res
 	}
 	return InterpretType(value)
+}
+
+func AssertVariableValue(v env.Var) env.Var {
+	return env.Var{
+		Name:  v.Name,
+		Value: InterpretTypeWithArray(v.Value.(string)),
+	}
 }

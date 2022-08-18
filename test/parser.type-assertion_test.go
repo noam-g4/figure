@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 
+	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/parser"
 )
 
@@ -84,5 +85,15 @@ func TestInterpretTypeWithArray(t *testing.T) {
 	cArr := compArr.([]interface{})
 	if cArr[0] != "a" && cArr[1] != 1 && !cArr[2].(bool) {
 		t.Error(cArr)
+	}
+}
+
+func TestAssertVariableValue(t *testing.T) {
+	v := parser.AssertVariableValue(env.Var{
+		Name:  "RETRIES",
+		Value: "5",
+	})
+	if v.Value != 5 {
+		t.Fail()
 	}
 }
