@@ -32,3 +32,44 @@ func TestModify(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestUpdateMapWithEnvs(t *testing.T) {
+	envs := []env.Var{
+		{
+			Name:  "env",
+			Value: "modified",
+		},
+		{
+			Name:  "writeMode",
+			Value: "true",
+		},
+		{
+			Name:  "retries",
+			Value: "5",
+		},
+		{
+			Name:  "options",
+			Value: "[a, b, c]",
+		},
+	}
+
+	_, data := fetcher.ReadFile("./resource/modify-test.yml")
+	_, mp := parser.ParseToMap(data)
+
+	nMap := modifier.UpdateMapWithEnvs(envs, mp)
+	if nMap["env"] != "modified" {
+		t.Fail()
+	}
+	if !nMap["writeMode"].(bool) {
+		t.Fail()
+	}
+	others := nMap["others"].(map[interface{}]interface{})
+	if others["retries"] != 5 {
+		t.Fail()
+	}
+	options := others["options"].([]interface{})
+	if len(options) != 3 && options[2] != "b" {
+		t.Fail()
+	}
+
+}

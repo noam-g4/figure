@@ -38,6 +38,9 @@ func CastFloatValue(val string) (bool, float64) {
 // enforce array to be in brackets & comma separator
 func ExtractArray(val string) (bool, []string) {
 	str := strings.Trim(val, " ")
+	if str == "" {
+		return false, []string{}
+	}
 	if len(str) > 0 && str[0] == '[' && str[len(str)-1] == ']' {
 		slc := strings.Split(str[1:len(str)-1], ",")
 		return true, f.Map(slc, func(s string) string {

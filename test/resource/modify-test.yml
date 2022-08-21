@@ -1,0 +1,8 @@
+env: test
+writeMode: false
+others:
+  retries: 10
+  options: 
+    - c
+    - d
+    - e

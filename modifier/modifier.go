@@ -1,8 +1,14 @@
 package modifier
 
-import "github.com/noam-g4/figure/env"
+import (
+	"github.com/noam-g4/figure/env"
+	"github.com/noam-g4/figure/parser"
+)
 
-func Modify(v env.Var, m map[interface{}]interface{}) map[interface{}]interface{} {
+func Modify(
+	v env.Var,
+	m map[interface{}]interface{},
+) map[interface{}]interface{} {
 	mod := m
 	for k := range mod {
 		if k.(string) == v.Name {
@@ -18,4 +24,17 @@ func Modify(v env.Var, m map[interface{}]interface{}) map[interface{}]interface{
 		}
 	}
 	return nil
+}
+
+func UpdateMapWithEnvs(
+	envs []env.Var,
+	m map[interface{}]interface{},
+) map[interface{}]interface{} {
+	if len(envs) == 0 {
+		return m
+	}
+
+	modEnv := parser.AssertVariableValue(envs[0])
+	modMap := Modify(modEnv, m)
+	return UpdateMapWithEnvs(envs[1:], modMap)
 }
