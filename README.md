@@ -31,10 +31,10 @@ import (
 type Conf struct {
 	Env       string `yaml:"env"`
 	WriteMode bool   `yaml:"writeMode"`
-  Others    struct {
-	  Retries int      `yaml:"retries"`
-    Options []string `yaml:"options"`
-  } `yaml:"others"`
+	Others    struct {
+		Retries int      `yaml:"retries"`
+		Options []string `yaml:"options"`
+	} `yaml:"others"`
 }
 
 func main() {
@@ -59,8 +59,8 @@ by running our program, our output will be:
 But, by setting environment variables, our program will replace the specified values from the yaml file by the set environment:
 ```bash
 export MAYAPP_WRITE_MOD=true
-export MY_APP_RETRIES=7
-export MY_APP_OPTIONS=[x,y]
+export MYAPP_RETRIES=7
+export MYAPP_OPTIONS=[x,y]
 
 go run .
 {test true {7 [x y]}}
