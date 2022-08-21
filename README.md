@@ -1,13 +1,18 @@
 ## noam-g4/figure
-A simple, elegant and highly flexible solution for managing your ***go app*** configurations environment.
-This package lets you manage your go app config with a ***.yml*** file and overwrite values using ***environment variables*** using a `Replacer` mechanism (more on that later). Essentially, making your app easly configurable when running in different environments.
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/noam-g4/figure/Go%20Test?label=tests&style=flat-square) <br/>
+A very simple package for loading your Go app with a `.yml` configuration and overwrite its values with environment variables. 
 
 ### Example
 Suppose we have this `./config.yml` file:
 ```yaml
 env: test
 writeMode: false
-retries: 5
+others:
+  retries: 5
+  options: 
+    - a
+    - b
+    - c
 ```
 In our application:
 ```go
@@ -19,98 +24,44 @@ import (
 	"strconv"
 
 	"github.com/noam-g4/figure"
-	r "github.com/noam-g4/figure/replacer"
+	"github.com/noam-g4/figure/parser"
+	"github.com/noam-g4/figure/config"
 )
 
-type Config struct {
+type Conf struct {
 	Env       string `yaml:"env"`
 	WriteMode bool   `yaml:"writeMode"`
-	Retries   int    `yaml:"retries"`
+	Others    struct {
+		Retries int      `yaml:"retries"`
+		Options []string `yaml:"options"`
+	} `yaml:"others"`
 }
 
 func main() {
-	replacers := []r.Replacer[Config]{
-		{
-			Env: "ENV",
-			Setter: func(c Config, s string) Config {
-				mod := c
-				mod.Env = s
-				return mod
-			},
-		},
-		{
-			Env: "WRITEMODE",
-			Setter: func(c Config, s string) Config {
-				mod := c
-				if s != "true" {
-					mod.WriteMode = false
-				}
-				mod.WriteMode = true
-				return mod
-			},
-		},
-		{
-			Env: "RETRIES",
-			Setter: func(c Config, s string) Config {
-				mod := c
-				i, err := strconv.Atoi(s)
-				if err != nil {
-					return c
-				}
-				mod.Retries = i
-				return mod
-			},
-		},
-	}
+	err, conf := figure.LoadConfig[Conf](config.Settings{
+		FilePath:   "./config.yml",
+		Prefix:     "MYAPP_",
+		Convention: parser.Camel,
+		Separator:  "_",
+	})
 
-	err, config := figure.LoadConfig("./config.yml", replacers)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(config)
+	fmt.Println(conf)
 }
 ```
 by running our program, our output will be:
 ```bash
-{ test false 5}
+{test false {5 [a b c]}}
 ```
 But, by setting environment variables, our program will replace the specified values from the yaml file by the set environment:
 ```bash
-export WRITEMOD=true
-export RETRIES=7
+export MAYAPP_WRITE_MOD=true
+export MYAPP_RETRIES=7
+export MYAPP_OPTIONS=[x,y]
+
 go run .
-{ test true 7 }
-```
-
-### Replacer
-The `Replacer` data structure, lets you specify the name of the environment variable you want to overwrite with and a special function that takes your config struct and the variable's value so you can choose how to parse this value to your config structure.
-This results in a highly flexible mechanism to overwrite config values, given a set of specific environment variables (which works great in cases of *docker compose* and *k8s deployments*)
-
-### Use this package as a simple yaml loader
-If you don't need to dynamically change environment variables and you just want a simple package that loads and unmarshall a yaml file, you can use this package as following:
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    "github.com/noam-g4/figure"
-)
-
-type Config struct {
-    Env       string `yaml:"env"`
-    WriteMode bool   `yaml:"writeMode"`
-    Retries   int    `yaml:"retries"`
-}
-
-func main() {
-    err, config := figure.LoadConfigWithoutReplacers("./config.yml")
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    fmt.Println(config)
-}
+{test true {7 [x y]}}
 ```

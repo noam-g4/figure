@@ -2,77 +2,52 @@ package test
 
 import (
 	"os"
-	"strconv"
 	"testing"
 
 	"github.com/noam-g4/figure"
-	"github.com/noam-g4/figure/replacer"
+	"github.com/noam-g4/figure/config"
+	"github.com/noam-g4/figure/parser"
 )
 
-const path = "./resource/test-config.yml"
-const invalid = "invalidpath"
-
-type Cnfg struct {
+type Conf struct {
 	Env       string `yaml:"env"`
 	WriteMode bool   `yaml:"writeMode"`
-	Retries   int    `yaml:"retries"`
-}
-
-func TestLoadConfigWithoutReplacers(t *testing.T) {
-
-	err, cSucc := figure.LoadConfigWithoutReplacers[Cnfg](path)
-
-	if err != nil || cSucc.Env != "test" || cSucc.Retries != 5 || cSucc.WriteMode {
-		t.Fail()
-	}
-
-	err, _ = figure.LoadConfigWithoutReplacers[Cnfg](invalid)
-	if err == nil {
-		t.Fail()
-	}
-
+	Others    struct {
+		Retries int      `yaml:"retries"`
+		Options []string `yaml:"options"`
+	} `yaml:"others"`
 }
 
 func TestLoadConfig(t *testing.T) {
-	os.Setenv("FIG_WRITEMODE", "true")
-	os.Setenv("FIG_RETRIES", "9")
+	os.Setenv("TST_ENV", "modified")
+	os.Setenv("TST_WRITE_MODE", "TRUE")
+	os.Setenv("TST_RETRIES", "5")
+	os.Setenv("TST_OPTIONS", "[a,b,c]")
 
-	replacers := []replacer.Replacer[Cnfg]{
-		{
-			Env: "FIG_WRITEMODE",
-			Setter: func(c Cnfg, v string) Cnfg {
-				if v != "true" {
-					return c
-				}
-				newConf := c
-				newConf.WriteMode = true
-				return newConf
-			},
-		},
-		{
-			Env: "FIG_RETRIES",
-			Setter: func(c Cnfg, v string) Cnfg {
-				i, err := strconv.Atoi(v)
-				if err != nil {
-					return c
-				}
-				newConf := c
-				newConf.Retries = i
-				return newConf
-			},
-		},
-	}
+	err, conf := figure.LoadConfig[Conf](config.Settings{
+		FilePath:   "./resource/modify-test.yml",
+		Prefix:     "TST_",
+		Convention: parser.Camel,
+		Separator:  "_",
+	})
 
-	err, cSucc := figure.LoadConfig(path, replacers)
-
-	if err != nil || cSucc.Env != "test" || cSucc.Retries != 9 || !cSucc.WriteMode {
+	if err != nil {
 		t.Fail()
 	}
 
-	err, _ = figure.LoadConfig(invalid, replacers)
-
-	if err == nil {
-		t.Fail()
+	if conf.Env != "modified" {
+		t.Error(conf.Env)
 	}
 
+	if !conf.WriteMode {
+		t.Error(conf.WriteMode)
+	}
+
+	if conf.Others.Retries != 5 {
+		t.Error(conf.Others.Retries)
+	}
+
+	if len(conf.Others.Options) != 3 && conf.Others.Options[1] != "b" {
+		t.Error(conf.Others.Options)
+	}
 }

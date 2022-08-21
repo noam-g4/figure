@@ -2,4 +2,7 @@ module github.com/noam-g4/figure
 
 go 1.18
 
-require gopkg.in/yaml.v2 v2.4.0
+require (
+	github.com/noam-g4/functional v1.0.0
+	gopkg.in/yaml.v2 v2.4.0
+)

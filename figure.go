@@ -1,41 +1,46 @@
 package figure
 
 import (
+	"github.com/noam-g4/figure/config"
+	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/fetcher"
+	"github.com/noam-g4/figure/modifier"
 	"github.com/noam-g4/figure/parser"
-	"github.com/noam-g4/figure/replacer"
+	f "github.com/noam-g4/functional"
 )
 
-func LoadConfig[C interface{}](
-	filepath string,
-	rs []replacer.Replacer[C],
-) (error, C) {
-
-	err, conf := LoadConfigWithoutReplacers[C](filepath)
+func LoadConfig[C interface{}](s config.Settings) (error, C) {
+	var c C
+	err, file := fetcher.ReadFile(s.FilePath)
 	if err != nil {
-		return err, conf
+		return err, c
 	}
 
-	return nil, replacer.ReplaceConfigWithEnv(conf, rs)
-
-}
-
-func LoadConfigWithoutReplacers[C interface{}](
-	filePath string,
-) (error, C) {
-
-	var e C
-
-	err, data := fetcher.ReadFile(filePath)
+	err, yamlMap := parser.ParseToMap(file)
 	if err != nil {
-		return err, e
+		return err, c
 	}
 
-	err, conf := parser.Parse[C](data)
+	envs := env.GetEnvsWithValue(env.ListEnvs(s.Prefix))
+
+	envsNoPf := f.Map(envs, func(v env.Var) env.Var {
+		return parser.StripPrefix(s.Prefix, v)
+	}, f.EmptySet[env.Var]())
+
+	transformedEnvs := f.Map(envsNoPf, func(v env.Var) env.Var {
+		return parser.TransformName(s.Convention, s.Separator, v)
+	}, f.EmptySet[env.Var]())
+
+	updatedMap := modifier.UpdateMapWithEnvs(transformedEnvs, yamlMap)
+
+	err, srlz := parser.SerializeYamlMap(updatedMap)
 	if err != nil {
-		return err, e
+		return err, c
 	}
 
-	return nil, conf
-
+	err, out := parser.Parse[C](srlz)
+	if err != nil {
+		return err, c
+	}
+	return nil, out
 }
