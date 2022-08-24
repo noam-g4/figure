@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/noam-g4/figure/fetcher"
+	"github.com/noam-g4/figure/v2/fetcher"
 )
 
 func TestReadFileSuccess(t *testing.T) {

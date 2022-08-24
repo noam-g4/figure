@@ -3,7 +3,7 @@ package parser
 import (
 	"strings"
 
-	"github.com/noam-g4/figure/env"
+	"github.com/noam-g4/figure/v2/env"
 	"gopkg.in/yaml.v2"
 )
 
