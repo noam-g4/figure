@@ -24,8 +24,6 @@ import (
 	"strconv"
 
 	"github.com/noam-g4/figure"
-	"github.com/noam-g4/figure/parser"
-	"github.com/noam-g4/figure/config"
 )
 
 type Conf struct {
@@ -38,10 +36,10 @@ type Conf struct {
 }
 
 func main() {
-	err, conf := figure.LoadConfig[Conf](config.Settings{
+	err, conf := figure.LoadConfig[Conf](figure.Settings{
 		FilePath:   "./config.yml",
 		Prefix:     "MYAPP_",
-		Convention: parser.Camel,
+		Convention: figure.Camel,
 		Separator:  "_",
 	})
 

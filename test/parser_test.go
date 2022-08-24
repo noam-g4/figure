@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 
+	"github.com/noam-g4/figure"
 	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/fetcher"
 	"github.com/noam-g4/figure/modifier"
@@ -43,10 +44,10 @@ func TestTransformName(t *testing.T) {
 		Value: "null",
 	}
 
-	camel := parser.TransformName(parser.Camel, "-", v)
-	snake := parser.TransformName(parser.Snake, "-", v)
-	caps := parser.TransformName(parser.Caps, "-", v)
-	snakeCaps := parser.TransformName(parser.SnakeCaps, "-", v)
+	camel := parser.TransformName(figure.Camel, "-", v)
+	snake := parser.TransformName(figure.Snake, "-", v)
+	caps := parser.TransformName(figure.Caps, "-", v)
+	snakeCaps := parser.TransformName(figure.SnakeCaps, "-", v)
 	undifiend := parser.TransformName(4, "-", v)
 
 	if camel.Name != "testThis" {
