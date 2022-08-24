@@ -1,4 +1,4 @@
-module github.com/noam-g4/figure
+module github.com/noam-g4/figure/v2
 
 go 1.18
 
