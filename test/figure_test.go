@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	"github.com/noam-g4/figure"
-	"github.com/noam-g4/figure/config"
-	"github.com/noam-g4/figure/parser"
 )
 
 type Conf struct {
@@ -24,10 +22,10 @@ func TestLoadConfig(t *testing.T) {
 	os.Setenv("TST_RETRIES", "5")
 	os.Setenv("TST_OPTIONS", "[a,b,c]")
 
-	err, conf := figure.LoadConfig[Conf](config.Settings{
+	err, conf := figure.LoadConfig[Conf](figure.Settings{
 		FilePath:   "./resource/modify-test.yml",
 		Prefix:     "TST_",
-		Convention: parser.Camel,
+		Convention: figure.Camel,
 		Separator:  "_",
 	})
 

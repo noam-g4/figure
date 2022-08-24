@@ -9,13 +9,6 @@ import (
 
 type Mode int
 
-const (
-	Camel     Mode = 0
-	Snake     Mode = 1
-	Caps      Mode = 2
-	SnakeCaps Mode = 3
-)
-
 func StripPrefix(prefix string, v env.Var) env.Var {
 	return env.Var{
 		Name:  v.Name[len(prefix):],
@@ -28,11 +21,11 @@ func TransformName(mode Mode, seperator string, v env.Var) env.Var {
 		return v
 	}
 	switch mode {
-	case Camel:
+	case 0:
 		return toCamel(seperator, v)
-	case Snake:
+	case 1:
 		return toSnake(seperator, v)
-	case Caps:
+	case 2:
 		return env.Var{
 			Name:  strings.ToUpper(v.Name),
 			Value: v.Value,

@@ -1,7 +1,6 @@
 package figure
 
 import (
-	"github.com/noam-g4/figure/config"
 	"github.com/noam-g4/figure/env"
 	"github.com/noam-g4/figure/fetcher"
 	"github.com/noam-g4/figure/modifier"
@@ -9,7 +8,21 @@ import (
 	f "github.com/noam-g4/functional"
 )
 
-func LoadConfig[C interface{}](s config.Settings) (error, C) {
+const (
+	Camel     parser.Mode = 0
+	Snake     parser.Mode = 1
+	Caps      parser.Mode = 2
+	SnakeCaps parser.Mode = 3
+)
+
+type Settings struct {
+	FilePath   string
+	Prefix     string
+	Separator  string
+	Convention parser.Mode
+}
+
+func LoadConfig[C interface{}](s Settings) (error, C) {
 	var c C
 	err, file := fetcher.ReadFile(s.FilePath)
 	if err != nil {
