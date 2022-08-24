@@ -56,7 +56,7 @@ by running our program, our output will be:
 ```
 But, by setting environment variables, our program will replace the specified values from the yaml file by the set environment:
 ```bash
-export MAYAPP_WRITE_MOD=true
+export MAYAPP_WRITE_MODE=true
 export MYAPP_RETRIES=7
 export MYAPP_OPTIONS=[x,y]
 
