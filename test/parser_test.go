@@ -3,11 +3,11 @@ package test
 import (
 	"testing"
 
-	"github.com/noam-g4/figure"
-	"github.com/noam-g4/figure/env"
-	"github.com/noam-g4/figure/fetcher"
-	"github.com/noam-g4/figure/modifier"
-	"github.com/noam-g4/figure/parser"
+	"github.com/noam-g4/figure/v2"
+	"github.com/noam-g4/figure/v2/env"
+	"github.com/noam-g4/figure/v2/fetcher"
+	"github.com/noam-g4/figure/v2/modifier"
+	"github.com/noam-g4/figure/v2/parser"
 )
 
 const realFile = "./resource/test-config.yml"
