@@ -23,7 +23,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/noam-g4/figure"
+	"github.com/noam-g4/figure/v2"
 )
 
 type Conf struct {
