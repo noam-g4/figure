@@ -48,6 +48,6 @@ func splitKeyVal(e string) Var {
 	strs := strings.Split(e, "=")
 	return Var{
 		Name:  strs[0],
-		Value: strs[1],
+		Value: strings.Join(strs[1:], "="),
 	}
 }

@@ -97,3 +97,15 @@ func TestAssertVariableValue(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAssertURIToString(t *testing.T) {
+	uri := "mongodb://admin:pass@docdb-cluster.us-east-1.docdb.amazonaws.com:27017/?retryWrites=false&ssl=true&sslCertificateAuthorityFile=secret/cert_ddb.pem&maxIdleTimeMS=30000"
+	v := parser.AssertVariableValue(env.Var{
+		Name:  "URI",
+		Value: uri,
+	})
+
+	if v.Value != uri {
+		t.Error(v.Value)
+	}
+}
