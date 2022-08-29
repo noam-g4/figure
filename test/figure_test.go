@@ -25,10 +25,8 @@ func TestLoadConfig(t *testing.T) {
 	os.Setenv("TST_URI", "mongodb://admin:pass@docdb-cluster.us-east-1.docdb.amazonaws.com:27017/?retryWrites=false&ssl=true&sslCertificateAuthorityFile=secret/cert_ddb.pem&maxIdleTimeMS=30000")
 
 	err, conf := figure.LoadConfig[Conf](figure.Settings{
-		FilePath:   "./resource/modify-test.yml",
-		Prefix:     "TST_",
-		Convention: figure.Camel,
-		Separator:  "_",
+		FilePath: "./resource/modify-test.yml",
+		Prefix:   "TST_",
 	})
 
 	if err != nil {
