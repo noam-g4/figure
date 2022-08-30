@@ -16,10 +16,11 @@ const (
 )
 
 type Settings struct {
-	FilePath   string
-	Prefix     string
-	Separator  string
-	Convention parser.Mode
+	FilePath     string
+	Prefix       string
+	Separator    string
+	MapSeperator string
+	Convention   parser.Mode
 }
 
 func LoadConfig[C interface{}](s Settings) (error, C) {
@@ -41,10 +42,18 @@ func LoadConfig[C interface{}](s Settings) (error, C) {
 	}, f.EmptySet[env.Var]())
 
 	transformedEnvs := f.Map(envsNoPf, func(v env.Var) env.Var {
-		return parser.TransformName(s.Convention, s.Separator, v)
+		return parser.TransformName(
+			s.Convention,
+			modifier.ValueOrDefault(s.Separator, "_"),
+			modifier.ValueOrDefault(s.MapSeperator, "__"),
+			v)
 	}, f.EmptySet[env.Var]())
 
-	updatedMap := modifier.UpdateMapWithEnvs(transformedEnvs, yamlMap)
+	updatedMap := modifier.UpdateMapWithEnvs(
+		transformedEnvs,
+		yamlMap,
+		modifier.ValueOrDefault(s.MapSeperator, "__"),
+	)
 
 	err, srlz := parser.SerializeYamlMap(updatedMap)
 	if err != nil {

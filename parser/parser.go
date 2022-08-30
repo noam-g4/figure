@@ -16,7 +16,7 @@ func StripPrefix(prefix string, v env.Var) env.Var {
 	}
 }
 
-func TransformName(mode Mode, seperator string, v env.Var) env.Var {
+func TransformName(mode Mode, seperator, mSep string, v env.Var) env.Var {
 	s := seperator
 	if seperator == "" {
 		s = "_"
@@ -26,16 +26,16 @@ func TransformName(mode Mode, seperator string, v env.Var) env.Var {
 	}
 	switch mode {
 	case 0:
-		return toCamel(s, v)
+		return toCamel(s, mSep, v)
 	case 1:
-		return toSnake(s, v)
+		return toSnake(s, mSep, v)
 	case 2:
 		return env.Var{
 			Name:  strings.ToUpper(v.Name),
 			Value: v.Value,
 		}
 	default:
-		y := toSnake(s, v)
+		y := toSnake(s, mSep, v)
 		return env.Var{
 			Name:  strings.ToUpper(y.Name),
 			Value: y.Value,
