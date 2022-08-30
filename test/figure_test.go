@@ -20,8 +20,8 @@ type Conf struct {
 func TestLoadConfig(t *testing.T) {
 	os.Setenv("TST_ENV", "modified")
 	os.Setenv("TST_WRITE_MODE", "TRUE")
-	os.Setenv("TST_RETRIES", "5")
-	os.Setenv("TST_OPTIONS", "[a,b,c]")
+	os.Setenv("TST_OTHERS__RETRIES", "5")
+	os.Setenv("TST_OTHERS__OPTIONS", "[a,b,c]")
 	os.Setenv("TST_URI", "mongodb://admin:pass@docdb-cluster.us-east-1.docdb.amazonaws.com:27017/?retryWrites=false&ssl=true&sslCertificateAuthorityFile=secret/cert_ddb.pem&maxIdleTimeMS=30000")
 
 	err, conf := figure.LoadConfig[Conf](figure.Settings{
@@ -38,7 +38,7 @@ func TestLoadConfig(t *testing.T) {
 	}
 
 	if !conf.WriteMode {
-		t.Error(conf.WriteMode)
+		t.Error(conf)
 	}
 
 	if conf.Others.Retries != 5 {
