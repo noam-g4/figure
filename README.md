@@ -39,8 +39,6 @@ func main() {
 	err, conf := figure.LoadConfig[Conf](figure.Settings{
 		FilePath:   "./config.yml",
 		Prefix:     "MYAPP_",
-		Convention: figure.Camel,
-		Separator:  "_",
 	})
 
 	if err != nil {
@@ -57,8 +55,8 @@ by running our program, our output will be:
 But, by setting environment variables, our program will replace the specified values from the yaml file by the set environment:
 ```bash
 export MYAPP_WRITE_MODE=true
-export MYAPP_RETRIES=7
-export MYAPP_OPTIONS=[x,y]
+export MYAPP_OTHERS__RETRIES=7
+export MYAPP_OTHERS__OPTIONS=[x,y]
 
 go run .
 {test true {7 [x y]}}
