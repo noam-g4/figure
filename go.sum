@@ -1,5 +1,5 @@
-github.com/noam-g4/functional v1.0.0 h1:3Uw7Ww3IQTLP1GrIdC8X4l2sfkNNhWqxZaDUsc9TNL4=
-github.com/noam-g4/functional v1.0.0/go.mod h1:mOWWuFuuF7H7mbf3KFYTKeGwZ3nYVb17Jd3p36hCvq0=
+github.com/noam-g4/functional v1.3.0 h1:MoOdEis+BSI1QFG0S6tN8R82B9860iGT02W1PV7s+8Q=
+github.com/noam-g4/functional v1.3.0/go.mod h1:mOWWuFuuF7H7mbf3KFYTKeGwZ3nYVb17Jd3p36hCvq0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=

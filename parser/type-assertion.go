@@ -45,7 +45,7 @@ func ExtractArray(val string) (bool, []string) {
 		slc := strings.Split(str[1:len(str)-1], ",")
 		return true, f.Map(slc, func(s string) string {
 			return strings.Trim(s, " ")
-		}, f.EmptySet[string]())
+		})
 	}
 	return false, []string{}
 }
@@ -72,7 +72,7 @@ func InterpretTypeWithArray(value string) interface{} {
 		res := f.Map(arr,
 			func(s string) interface{} {
 				return InterpretType(s)
-			}, f.EmptySet[interface{}]())
+			})
 		return res
 	}
 	return InterpretType(value)

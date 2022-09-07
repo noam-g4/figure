@@ -39,7 +39,7 @@ func LoadConfig[C interface{}](s Settings) (error, C) {
 
 	envsNoPf := f.Map(envs, func(v env.Var) env.Var {
 		return parser.StripPrefix(s.Prefix, v)
-	}, f.EmptySet[env.Var]())
+	})
 
 	transformedEnvs := f.Map(envsNoPf, func(v env.Var) env.Var {
 		return parser.TransformName(
@@ -47,7 +47,7 @@ func LoadConfig[C interface{}](s Settings) (error, C) {
 			modifier.ValueOrDefault(s.Separator, "_"),
 			modifier.ValueOrDefault(s.MapSeperator, "__"),
 			v)
-	}, f.EmptySet[env.Var]())
+	})
 
 	updatedMap := modifier.UpdateMapWithEnvs(
 		transformedEnvs,

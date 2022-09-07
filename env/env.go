@@ -24,7 +24,7 @@ func ListEnvs(prefix string) []string {
 			return false
 		}
 		return true
-	}, f.EmptySet[string]())
+	})
 }
 
 func GetEnvsWithValue(envs []string) []Var {
@@ -34,14 +34,14 @@ func GetEnvsWithValue(envs []string) []Var {
 			return v
 		}
 		return Var{}
-	}, f.EmptySet[Var]())
+	})
 
 	return f.Filter(vars, func(v Var) bool {
 		if v.Value == "" {
 			return false
 		}
 		return true
-	}, f.EmptySet[Var]())
+	})
 }
 
 func splitKeyVal(e string) Var {
