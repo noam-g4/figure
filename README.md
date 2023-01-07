@@ -1,5 +1,5 @@
 ## noam-g4/figure
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/noam-g4/figure/Go%20Test?label=tests&style=flat-square) <br/>
+[![Go Test](https://github.com/noam-g4/figure/actions/workflows/test.yml/badge.svg)](https://github.com/noam-g4/figure/actions/workflows/test.yml) <br/>
 A very simple package for loading your Go app with a `.yml` configuration and overwrite its values with environment variables. 
 
 ### Example
